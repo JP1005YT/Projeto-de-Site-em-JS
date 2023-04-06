@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>PW - Bolado</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:ital@1&display=swap');
+        *{
+            user-select: none;
+            padding: 0;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+        }
+        body{
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            background: #b0b0b0;
+        }
+        header{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 8%;
+        }
+        main{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 92%;
+        }
+        body > span{
+            font-size: 25px;
+            position: absolute;
+            padding: 0 2% 0 2%;
+            bottom: 0;
+            right: 0;
+        }
+        table{
+            width: 70%;
+        }
+        tr{
+            width: 100%;
+        }
+        td,th{
+            text-align: center;
+            width:  14.28%;
+            border: 1px solid black;
+        }
+        .opc{
+            width: 10%;
+        }
+        .opc:hover{
+            cursor: pointer;
+            box-shadow: inset 0 0 2px black;
+        }
+        i{
+            cursor: pointer;
+            font-size: 60px;
+        }
+        .btn-cad{
+            cursor: pointer;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-direction: column;
+            width: 5%;
+            position: absolute;
+            z-index: 1;
+            background: #fff;
+            animation: menu_cls 300ms ease;
+            border-bottom-right-radius:25px;
+        }
+        .btn-cad.ativo{
+            cursor:default;
+            width: 30%;
+            height: 100%;
+            animation: menu_opn 300ms ease;
+            border-bottom-right-radius:0;
+        }
+        @keyframes menu_opn {
+            0% {width: 5%;height: 5%;border-bottom-right-radius:25px;}
+            100%{width: 30%; height: 100%;border-bottom-right-radius:0;}
+        }
+        @keyframes menu_cls {
+            0% {width: 30%; height: 100%;border-bottom-right-radius:0;}
+            100%{width: 5%; height: 5%;border-bottom-right-radius:25px;}
+        }
+        .opcs{
+            display: none;
+        }
+        .opcs.ativo{
+            display: flex;
+            justify-content: space-around;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 80%;
+        }
+        .opcs.ativo span{
+            transition: 200ms;
+            cursor: pointer;
+            text-align: center;
+            width: 80%;
+            padding: 5%;
+            background: #b0b0b0;
+            border-radius: 25px;
+            font-size: 30px;
+        }
+        .opcs.ativo span:hover{
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) inset;
+        }
+        .box_cad{
+            width: 0%;
+            position: absolute;
+            z-index: 2;
+            height: 100%;
+            background: white;
+            animation: cad_cls 300ms ease;
+        }
+        .box_cad.ativo{
+            display: flex;
+        }
+        .box_cad.ativo{
+            display: flex;
+            width: 100%;
+            position: absolute;
+            z-index: 2;
+            height: 100%;
+            animation: cad_opn 300ms ease;
+        }
+        .opcsb{
+            display: none;
+        }
+        .opcsb.ativo > i{
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .opcsb.ativo{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        @keyframes cad_opn {
+            0%{width: 0%;}
+            100%{width: 100%;}
+        }
+        @keyframes cad_cls {
+            0%{width: 100%;}
+            100%{width: 0%;}
+        }
+        .cad_opcs{
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-direction: column;
+            width: 20%;
+            height: 70%;
+            border-radius: 25px;
+            box-shadow: 0 0 15px #00000029;
+            z-index: 1;
+        }
+        .cad_opcs span{
+            width: 90%;
+            padding: 20%;
+            font-size: 1.8em;
+            box-shadow: 0 0 15px #00000029;
+            border-radius: 25px;
+            text-align: center;
+        }
+        .cad_opcs span:hover{
+            cursor: pointer;
+            box-shadow: 0 0 15px #00000029 inset;
+        }
+        .cadopc0,.cadopc1,.cadopc2{
+            display: none;
+        }
+        .cadopc0.ativo,.cadopc1.ativo,.cadopc2.ativo{
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-direction: column;
+            box-shadow: 0 0 15px #00000029 inset;
+            width: 40%;
+            height: 70%;
+            border-radius: 25px;
+            margin-left: 5%;
+        }
+        .cadopc0.ativo input,.cadopc1.ativo input,.cadopc2.ativo input{
+            width: 75%;
+            font-size: 27px;
+            padding: 0.5%;
+        }
+        .cadopc0.ativo button,.cadopc1.ativo button,.cadopc2.ativo button{
+            width: 50%;
+            font-size: 20px;
+            padding: 0.5%;
+        }
+    </style>
+</head>
+<body>
+    <div id="btn-cad" class="btn-cad">
+        <i class='bx bx-menu' onclick="troca_menu()"></i>
+        <div class="opcs" id="opcs">
+            <span onclick="troca_cad()">Cadastrar</span>
+            <span>Loja</span>
+        </div>
+    </div>
+    <div id="box_cad" class="box_cad">
+       <div id="opcsb" class="opcsb">
+            <i class='bx bx-x' onclick="troca_cad()"></i>
+            <div class="cad_opcs">
+                <span onclick="mudatelacad(0)">Cliente</span>
+                <span onclick="mudatelacad(2)">Vendedor</span>
+                <span onclick="mudatelacad(1)">Produto</span>
+            </div>
+            <div class="cadopc0" id="div_cad">
+                <h1>Cadastrar - Cliente</h1>
+                <input name="nome" id="cli_nome" type="text" placeholder="Nome">
+                <input name="email" id="cli_email" placeholder="E-mail">
+                <input name="date" id="cli_date" type="date">
+                <button onclick="adicionar(0)">Cadastrar</button>
+            </div> 
+            <div class="cadopc1" id="div_cad">
+                <h1>Cadastrar - Vendedor</h1>
+                <input name="nome" id="ven_nome" type="text" placeholder="Nome">
+                <input name="email" id="ven_email" placeholder="E-mail">
+                <input name="telefone" id="ven_telefone" type="text" placeholder="Telefone">
+                <button onclick="adicionar(1)">Cadastrar</button>
+            </div>
+            <div class="cadopc2" id="div_cad">
+                <h1>Cadastrar - Produto</h1>
+                <input name="nome" id="pro_nome" type="text" placeholder="Nome">
+                <input name="descricao" id="pro_descricao" type="text" placeholder="Descriçao"> 
+                <input name="preco" id="pro_preco" placeholder="Preço">
+                <input name="quantidade" id="pro_quantidade"placeholder="Quantidade">
+                <input name="vendedor_id" id="vendedor_id_input" placeholder="ID-VENDEDOR" list="vendedor_id">
+                <datalist id="vendedor_id">
+                
+                </datalist>
+                <button onclick="adicionar(2)">Cadastrar</button>
+            </div> 
+       </div>
+    </div>
+    <header>
+        <h1>CRUD</h1>
+    </header>
+    <main>
+        <table class="clientes"></table><br>
+        <table class="vendedores"></table><br>
+        <table class="produtos"></table><br>
+    </main>
+    <span>&#169JP</span>
+    <script>
+        let text = '//------Codigo por JP-------//\n//                          //\n//==========================//\n//                          //\n//       |JJJJJJJ |PPPPP    //\n//          |J    |P  |P    //\n//          |J    |PPPPP    //\n//       |JJJJ    |P        //\n//                          //\n//==========================//'
+        let debug = true
+        let ids = []
+        //Variaveis Globais
+        let resposta
+        let table_name
+        function l(e){
+            console.debug(e)
+        }
+        l(text)
+        function mudatelacad(e){
+            let divs = document.querySelectorAll('#div_cad')
+            divs.forEach(function(e,n){
+                e.classList.value = `cadopc${n}`
+            })
+            switch (e) {
+                case 0:
+                    divs[0].classList.toggle('ativo')    
+                break;
+                case 1:
+                    divs[2].classList.toggle('ativo')    
+                break;
+                case 2:
+                    divs[1].classList.toggle('ativo')    
+                break;
+            }
+        }
+        function troca_cad(){
+            document.getElementById('box_cad').classList.toggle('ativo')
+            document.getElementById('opcsb').classList.toggle('ativo')
+            mudatelacad()
+            construtor_opcs()
+        }
+        function troca_menu(){
+            document.getElementById('btn-cad').classList.toggle('ativo')
+            document.getElementById('opcs').classList.toggle('ativo')
+        }
+        function random_id(){
+            let i = 0
+            let id = ""
+            while(i < 4){
+                let n = Math.floor(Math.random() * 10)
+                id = id+n
+                i++
+            }
+            return id
+        }
+        //Função que todos os dados de uma tabela
+        async function obter_dados(table){
+            ids = []
+            const dados = await fetch('./Network/Functions/request.php',{
+                method: "POST",
+                body: JSON.stringify({table : table})
+            });
+            table_name = table
+            resposta = await dados.json();
+            if(debug){
+                l('Dados Puxados')
+            }
+            construtor(resposta,table)
+            }
+        // Manda o request para o PHP com os dados nessesarios
+        async function deletar_dados(table,id,cod){
+            const dados = await fetch('./Network/Functions/delete.php',{
+                method: "POST",
+                body: JSON.stringify({table : table,id : id,cod : cod})
+            });
+            alert("DELETADO")
+            if(debug){
+                l('Dados Deletados')
+            }
+            obter_dados(table)
+        }
+        // Manda o request para o PHP editar
+        async function editar_dados(table,id,array,cod){
+            switch (table) {
+                case 'clientes':
+                    let array_a = array[3].split('/')
+                    let data_format = `${array_a[2]}/${array_a[1]}/${array_a[0]}`
+                    const dados = await fetch('./Network/Functions/edit.php',{
+                        method: "POST",
+                        body: JSON.stringify({table : table,id : id,nome : array[1],email : array[2],date : data_format})
+                    });
+                    resposta = await dados.json();
+                    if(resposta){
+                        alert('Editado com sucesso')
+                    }else{
+                        alert('Ocorreu algum erro')
+                    }
+                    if(debug){
+                        l('Dados Editados')
+                    }
+                    obter_dados(table)    
+                break;
+                case 'vendedores':
+                        const dadoss = await fetch('./Network/Functions/edit.php',{
+                            method: "POST",
+                            body: JSON.stringify({table : table,id : id,nome : array[1],email : array[2],telefone : array[3],cod : cod})
+                        });
+                        resposta = await dadoss.json();
+                break;
+                case 'produtos':
+                const dadosss = await fetch('./Network/Functions/edit.php',{
+                            method: "POST",
+                            body: JSON.stringify({table : table,id : id,nome : array[1],descricao : array[2],preco : array[3],quantidade : array[4],vendedor_id : array[5]})
+                        });
+                        resposta = await dadosss.json();
+                    break;
+                default:
+                    break;
+            }
+            if(resposta){
+                alert('Editado com sucesso')
+            }else{
+                alert('Ocorreu algum erro')
+            }
+            obter_dados(table)    
+        }
+        // Manda o request para o PHP add
+        async function adicionar_dados(table,array){
+            let dados
+            switch (table) {
+                case 0:
+                    dados = await fetch('./Network/Functions/adciona.php',{
+                            method: "POST",
+                            body: JSON.stringify({table : table,nome : array[0],email : array[1],date : array[2]})
+                        });
+                break;
+                case 1:
+                    dados = await fetch('./Network/Functions/adciona.php',{
+                            method: "POST",
+                            body: JSON.stringify({table : table,nome : array[0],email : array[1],telefone : array[2],id : array[3]})
+                        });
+                break;
+                case 2:
+                dados = await fetch('./Network/Functions/adciona.php',{
+                            method: "POST",
+                            body: JSON.stringify({table : table,nome : array[0],descricao : array[1],preco : array[2],quantidade : array[3],idvend : array[4]})
+                        });
+                break;
+            }
+            resposta = await dados.json();
+            if(resposta){
+                alert('Adicionado com sucesso')
+                switch (table) {
+                case 0:
+                    obter_dados('clientes')
+                break;
+                case 1:
+                    obter_dados('vendedores')
+                break;
+                case 2:
+                    obter_dados('produtos')
+                break;
+            }
+            }else{
+                alert('Ocorreu algum erro')
+            }
+            if(debug){
+                l('Dados Cadastrados')
+            }
+        }
+        // Função que monta a table
+        function construtor(array,tabl){
+            const table = document.querySelector(`.${tabl}`)
+            table.innerHTML = ''
+            let dados = array
+            let i = true
+            dados.forEach(linha => {
+                let tr = document.createElement('tr')
+                let nomes_colunas = String(Object.keys(linha)).split(",")
+                // Titulo tabela
+                if(i){
+                    let tr_titulo = document.createElement('tr')
+                    let th_titulo = document.createElement('td')
+                    th_titulo.innerHTML=tabl
+                    th_titulo.setAttribute('colspan',`${nomes_colunas.length + 2}`)
+                    tr_titulo.appendChild(th_titulo)
+                    tr_titulo.setAttribute('colspan',`${nomes_colunas.length + 1}`)
+                    table.appendChild(tr_titulo)
+                    let tr_h = document.createElement('tr')
+                    nomes_colunas.forEach(obj => {
+                        let th = document.createElement('th')
+                        th.innerHTML = obj.toUpperCase()
+                        tr_h.appendChild(th)
+                    })
+                    let th = document.createElement('th')
+                    th.innerHTML = '***'
+                    th.setAttribute('colspan','2')
+                    tr_h.appendChild(th)
+                    i = false   
+                    table.appendChild(tr_h)
+                }
+                // Tabelas que tem datas
+                nomes_colunas.forEach(elemet =>{
+                    if(elemet.toUpperCase() === 'DATE'){
+                        let format_date = linha[`${nomes_colunas[3]}`]
+                        let date_desmantelado = format_date.split('-')
+                        let new_str
+                        new_str = `${date_desmantelado[2]}/${date_desmantelado[1]}/${date_desmantelado[0]}`
+                        linha[`${nomes_colunas[3]}`] = new_str
+                    }
+                })
+                nomes_colunas.forEach(function(item,n){
+                    let td = document.createElement('td')
+                    td.innerHTML = linha[`${nomes_colunas[n]}`]
+                    tr.appendChild(td)
+                    if(item === 'id_vend'){
+                        ids.push(linha['id_vend'])
+                    }
+                })
+
+                let td_ed = document.createElement('th')
+                    td_ed.innerHTML = 'Editar'
+                    if(linha['id']){
+                        td_ed.setAttribute('onclick',`editar('${linha['id']}','${tabl}',0)`)
+                    }else{
+                        td_ed.setAttribute('onclick',`editar('${linha['id_vend']}','${tabl}',1)`)
+                    }
+                    td_ed.classList.add('opc')
+                    tr.appendChild(td_ed)
+
+                let td_ex = document.createElement('th')
+                    td_ex.innerHTML = 'Excluir'
+                    if(linha['id']){
+                        td_ex.setAttribute('onclick',`excluir('${linha['id']}','${tabl}',0)`)
+                    }else{
+                        td_ex.setAttribute('onclick',`excluir('${linha['id_vend']}','${tabl}',1)`)
+                    }
+                    td_ex.classList.add('opc')
+                    tr.appendChild(td_ex)
+                if(linha['id']){
+                    tr.setAttribute('id',tabl + linha['id'])
+                }else{
+                    tr.setAttribute('id',tabl + linha['id_vend'])
+                }
+                
+                table.appendChild(tr)
+
+            })
+            if(debug){
+                l('Tabela Contruida')
+            }
+        }
+        // Função construtuor opções
+        function construtor_opcs(){
+            const opcoes = document.querySelector('#vendedor_id')
+            ids.forEach(item =>{
+                let obj = document.createElement('option')
+                obj.value = item
+                obj.innerHTML = item
+                opcoes.appendChild(obj)
+            })
+        }
+        // Função que chama o processo de Adicionar
+        function adicionar(cod){
+            let array_dados = []
+            switch (cod) {
+                case 0:
+                    // Cadastro de Clientes
+                    let cli_nome = document.getElementById('cli_nome')
+                    let cli_email = document.getElementById('cli_email')
+                    let cli_date = document.getElementById('cli_date')
+                    if(cli_nome.value=== ""&&cli_email.value=== ""&&cli_date.value=== ""){
+                        alert("Preencha todos os dados")
+                    }else{
+                        array_dados = [cli_nome.value,cli_email.value,cli_date.value]
+                        cli_nome.value = ""
+                        cli_email.value = ""
+                        cli_date.value = ""
+                        adicionar_dados(cod,array_dados)
+                    }
+                break;
+                case 1:
+                    // Cadastro de Vendedor
+                    let ven_nome = document.getElementById('ven_nome')
+                    let ven_email = document.getElementById('ven_email')
+                    let ven_telefone = document.getElementById('ven_telefone')
+                    if(ven_nome.value=== ""&&ven_email.value=== ""&&ven_telefone.value=== ""){
+                        alert("Preencha todos os dados")
+                    }else{
+                        array_dados = [ven_nome.value,ven_email.value,ven_telefone.value,random_id()]
+                        ven_email = ""
+                        ven_nome = ""
+                        ven_telefone = ""
+                        adicionar_dados(cod,array_dados)
+                    }
+                break;
+                case 2:
+                    let pro_nome = document.getElementById('pro_nome')
+                    let pro_descricao = document.getElementById('pro_descricao')
+                    let pro_preco = document.getElementById('pro_preco')
+                    let pro_quantidade = document.getElementById('pro_quantidade')
+                    let vendedor_id_input = document.getElementById('vendedor_id_input')
+                    if (pro_nome.value === "" && pro_descricao.value === "" && pro_preco.value === "" && pro_quantidade.value === "" && vendedor_id_input.value === "") {
+                    }else{
+                        array_dados = [pro_nome.value,pro_descricao.value,pro_preco.value,pro_quantidade.value,vendedor_id_input.value]
+                        pro_nome.value = '';
+                        pro_descricao.value = '';
+                        pro_preco.value = '';
+                        pro_quantidade.value = '';
+                        vendedor_id_input.value = '';
+                        adicionar_dados(cod,array_dados)
+                    }
+                break;
+            }
+            troca_cad()
+            troca_menu()
+        }
+        // Função que chama o processo de Editar
+        function editar(e,table,cod){
+            let tr = document.querySelector(`#${table + e}`)
+            let lista_td = tr.querySelectorAll('td')
+            let obj_td = []
+            let ign = true
+            let cancel = false
+            lista_td.forEach(function(item) {
+                if(!cancel){
+                    if (ign) {
+                        obj_td.push(item.innerHTML)
+                        ign = false
+                    }else{
+                        let resp = prompt(item.innerHTML,item.innerHTML)
+                        if(resp === null){
+                            cancel = true
+                        }else{
+                            obj_td.push(resp);
+                        }
+                    }
+                }
+            });
+            if(!cancel){
+                editar_dados(table,e,obj_td,cod)
+            }else{
+                alert('Cancelado')
+            }
+        }
+        // Função que manda o request para a exclusão
+        function excluir(e,table,cod){
+            let teste = confirm(`ATENÇÃO O REGISTRO COM O ID ${e}, NA TABELA ${table} SERÁ DELETADO`)
+            if(teste){
+                deletar_dados(table,e,cod)
+            }else{
+                alert('Registro Mantido')
+            }
+        }
+        obter_dados('clientes')
+        obter_dados('vendedores')
+        obter_dados('produtos')
+    </script>
+</body>
+</html>

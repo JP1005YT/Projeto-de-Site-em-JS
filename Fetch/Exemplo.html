@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Louja</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href=''>
+    <style>
+        table{
+            width: 25%;
+        }
+        tr,td{
+            width: fit-content;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <form method="POST" action="">
+        <input name="test" id="test">
+        <input name="cod"  id="cod">
+        <button type="submit" class="pull">PULL</button>
+    </form>
+    <button class="push">PUSH</button>
+    <table></table>
+    <script>
+        let obj = []
+        const form = document.querySelector('form')
+        form.addEventListener("submit",async(e)=>{
+            e.preventDefault();
+            const dadosForm = new FormData(form)
+            console.log(form)
+            const dados = await fetch("teste.php",{
+                method: "POST",
+                body: dadosForm
+            });
+            const resposta = await dados.json();
+            alert(resposta)
+        })
+        const btn = document.querySelector('.push')
+        btn.addEventListener("click",async()=>{
+            let div = document.querySelector('table')
+            const dados = await fetch("teste2.php",{
+                method: "POST",
+            });
+            div.innerHTML = ''
+            let resposta = await dados.json();
+            resposta.forEach(es => {
+                let pessoa = document.createElement('tr')
+                pessoa.setAttribute('class','people')
+                let keys = String(Object.keys(es)).split(",")
+                console.log(keys)
+                keys.forEach(function(e,n){
+                    console.log(e)
+                    let span = document.createElement('td');
+                    span.innerHTML = `${e.toUpperCase()}:` + es[`${keys[n]}`]
+                    pessoa.appendChild(span)
+                })
+                div.appendChild(pessoa)
+                document.querySelectorAll('input').forEach(e => {
+                e.value = ''
+                })
+            });
+        })
+    </script>
+</body>
+</html>
