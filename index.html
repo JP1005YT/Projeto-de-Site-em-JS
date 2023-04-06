@@ -24,11 +24,35 @@
             background: #b0b0b0;
         }
         header{
+            background: #b0b0b0;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-around;
             width: 100%;
             height: 8%;
+            box-shadow: 0 0 10px #00000054 inset;
+            z-index: 1;
+        }
+        header > div{
+            width: 40%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            font-size: 25px;
+        }
+        header > div div{
+            text-align: center;
+            border-radius: 20px;
+            margin: 2%;
+            width: 33%;
+            padding: 5px 15px 5px 15px;
+            box-shadow: 0 0 10px #00000054 inset;
+        }
+        header > div div:hover{
+            cursor: pointer;
+            background: #fff;
         }
         main{
             display: flex;
@@ -75,7 +99,7 @@
             flex-direction: column;
             width: 5%;
             position: absolute;
-            z-index: 1;
+            z-index: 2;
             background: #fff;
             animation: menu_cls 300ms ease;
             border-bottom-right-radius:25px;
@@ -122,7 +146,7 @@
         .box_cad{
             width: 0%;
             position: absolute;
-            z-index: 2;
+            z-index: 6;
             height: 100%;
             background: white;
             animation: cad_cls 300ms ease;
@@ -207,6 +231,24 @@
             font-size: 20px;
             padding: 0.5%;
         }
+        .clientes{
+            display: none;
+        }
+        .vendedores{
+            display: none;
+        }
+        .produtos{
+            display: none;
+        }
+        .produtos.ativo{
+            display: block;
+        }
+        .clientes.ativo{
+            display: block;
+        }
+        .vendedores.ativo{
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -214,7 +256,7 @@
         <i class='bx bx-menu' onclick="troca_menu()"></i>
         <div class="opcs" id="opcs">
             <span onclick="troca_cad()">Cadastrar</span>
-            <span>Loja</span>
+            <span onclick="troca_loja()">Loja</span>
         </div>
     </div>
     <div id="box_cad" class="box_cad">
@@ -252,14 +294,22 @@
                 <button onclick="adicionar(2)">Cadastrar</button>
             </div> 
        </div>
+       <div class="opcsc" id="opcsc">
+            <i class='bx bx-x' onclick="troca_loja()" style="display:none;"></i>
+       </div>
     </div>
     <header>
+        <div>
+            <div onclick="troca_table(0)">Clientes</div>
+            <div onclick="troca_table(1)">Vendedores</div> 
+            <div onclick="troca_table(2)">Produtos</div>
+        </div>
         <h1>CRUD</h1>
     </header>
     <main>
-        <table class="clientes"></table><br>
-        <table class="vendedores"></table><br>
-        <table class="produtos"></table><br>
+        <table class="clientes" id="clientes"></table><br>
+        <table class="vendedores" id="vendedores"></table><br>
+        <table class="produtos" id="produtos"></table><br>
     </main>
     <span>&#169JP</span>
     <script>
@@ -296,9 +346,31 @@
             mudatelacad()
             construtor_opcs()
         }
+        function troca_loja(){
+
+        }
         function troca_menu(){
             document.getElementById('btn-cad').classList.toggle('ativo')
             document.getElementById('opcs').classList.toggle('ativo')
+        }
+        function troca_table(e){
+            let cli = document.getElementById("clientes")
+            let ven = document.getElementById("vendedores")
+            let pro = document.getElementById("produtos")
+            cli.classList.value = 'clientes'
+            ven.classList.value = 'vendedores'
+            pro.classList.value = 'produtos'
+            switch (e) {
+                case 0:
+                    cli.classList.toggle('ativo')
+                break;
+                case 1:
+                    ven.classList.toggle('ativo')
+                break;
+                case 2:
+                    pro.classList.toggle('ativo')
+                break;
+            }
         }
         function random_id(){
             let i = 0
@@ -427,7 +499,7 @@
         }
         // Função que monta a table
         function construtor(array,tabl){
-            const table = document.querySelector(`.${tabl}`)
+            const table = document.querySelector(`#${tabl}`)
             table.innerHTML = ''
             let dados = array
             let i = true
