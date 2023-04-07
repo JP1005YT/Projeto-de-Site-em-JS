@@ -249,6 +249,23 @@
         .vendedores.ativo{
             display: block;
         }
+        .opcsc{
+            display: none;
+        }
+        .opcsc.ativo{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .opcsc i{
+            z-index: 10;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .opcsc main{
+            background:red;
+        }
     </style>
 </head>
 <body>
@@ -288,14 +305,16 @@
                 <input name="preco" id="pro_preco" placeholder="Preço">
                 <input name="quantidade" id="pro_quantidade"placeholder="Quantidade">
                 <input name="vendedor_id" id="vendedor_id_input" placeholder="ID-VENDEDOR" list="vendedor_id">
-                <datalist id="vendedor_id">
-                
-                </datalist>
+                <datalist id="vendedor_id"></datalist>
                 <button onclick="adicionar(2)">Cadastrar</button>
             </div> 
        </div>
        <div class="opcsc" id="opcsc">
-            <i class='bx bx-x' onclick="troca_loja()" style="display:none;"></i>
+            <i class='bx bx-x' onclick="troca_loja()"></i>
+            <header><h1>Loja</h1></header>
+            <main>
+
+            </main>
        </div>
     </div>
     <header>
@@ -347,7 +366,9 @@
             construtor_opcs()
         }
         function troca_loja(){
-
+            let opcsc = document.getElementById("opcsc")
+            opcsc.classList.toggle('ativo')
+            document.getElementById('box_cad').classList.toggle('ativo')
         }
         function troca_menu(){
             document.getElementById('btn-cad').classList.toggle('ativo')
