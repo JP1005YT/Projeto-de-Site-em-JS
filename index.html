@@ -169,7 +169,7 @@
             position: absolute;
             top: 0;
             left: 0;
-        }
+        }   
         .opcsb.ativo{
             width: 100%;
             display: flex;
@@ -264,7 +264,76 @@
             left: 0;
         }
         .opcsc main{
-            background:red;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            position: relative;
+        }
+        .opcsc main nav div{
+            margin: 5%;
+            text-align: center;
+            width: 30%;
+            border-radius: 25px;
+            box-shadow: 0 0 15px #00000029;
+            padding: 0.5%;
+        }
+        .opcsc main nav div:hover{
+            cursor: pointer;
+            box-shadow: 0 0 15px #00000029 inset;
+        }
+        .vendas{
+            display: none;
+        }
+        .historico{
+            display: none;
+        }
+        .adicionar_venda{
+            display: none;
+        }
+        .adicionar_venda.ativo{
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            background: green;
+        }
+        .vendas.ativo{
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            background: red;
+        }
+        .historico.ativo{
+            display: block;
+            background: blue;
+        }
+        .btns-opc-vendas{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        .btns-opc-vendas.ativo{
+            display: none;
+        }
+        .x{
+            display: none;
+        }
+        .x.ativo{
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
+        }
+        .vendas div{
+            width: 10%;
+            background: #fff;
+            height: 50%;
         }
     </style>
 </head>
@@ -311,9 +380,27 @@
        </div>
        <div class="opcsc" id="opcsc">
             <i class='bx bx-x' onclick="troca_loja()"></i>
-            <header><h1>Loja</h1></header>
+            <header>
+                <h1>Loja</h1>
+            </header>
             <main>
-
+                <div id="x" class="x" onclick="troca_vendas()">
+                    <i class='bx bx-x'></i>
+                </div>
+                <nav id="btns-opc-vendas" class="btns-opc-vendas">
+                    <div onclick="troca_vendas(0)">Visualizar Vendas</div>
+                    <div onclick="troca_vendas(2)">Nova venda</div>
+                    <div onclick="troca_vendas(1)">Visualizar Historico de Vendas</div>
+                </nav>
+                <div class="vendas" id="vendas">
+                    <div></div>
+                </div>
+                <div class="historico" id="historico">
+                    1
+                </div>
+                <div class="adicionar_venda" id="adicionar_venda">
+                    3
+                </div>
             </main>
        </div>
     </div>
@@ -402,6 +489,26 @@
                 i++
             }
             return id
+        }
+        function troca_vendas(e){
+            document.getElementById('btns-opc-vendas').classList.toggle('ativo')
+            document.getElementById('x').classList.toggle('ativo')
+            switch (e) {
+                case 0:
+                    document.getElementById('vendas').classList.toggle('ativo')
+                    break;
+                case 1:
+                    document.getElementById('historico').classList.toggle('ativo')
+                    break;
+                case 2:
+                    document.getElementById('adicionar_venda').classList.toggle('ativo')
+                    break;
+                default:
+                    document.getElementById('vendas').classList.value = 'vendas'
+                    document.getElementById('historico').classList.value = 'historico'
+                    document.getElementById('adicionar_venda').classList.value = 'adicionar_venda'
+                    break;
+            }
         }
         //Função que todos os dados de uma tabela
         async function obter_dados(table){
