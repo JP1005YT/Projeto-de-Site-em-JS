@@ -399,7 +399,15 @@
                     1
                 </div>
                 <div class="adicionar_venda" id="adicionar_venda">
-                    3
+                    <input placeholder="Cliente" list="cli_name">
+                    <datalist id="cli_name"></datalist>
+                    <input placeholder="Produto" list="pro_name">
+                    <datalist id="pro_name"></datalist>
+                    <!-- Ver depois esse maximo tem que ser o maximo que ta no "estoque" -->
+                    <input placeholder="Quantidade" max="">
+                    <!-- A ideia é puxar os ids pelos nomes que estao nas listas e com eles
+                        construir todos os dados para enviar para o banco
+                    -->
                 </div>
             </main>
        </div>
@@ -422,6 +430,10 @@
         let text = '//------Codigo por JP-------//\n//                          //\n//==========================//\n//                          //\n//       |JJJJJJJ |PPPPP    //\n//          |J    |P  |P    //\n//          |J    |PPPPP    //\n//       |JJJJ    |P        //\n//                          //\n//==========================//'
         let debug = true
         let ids = []
+        let names_cli = []
+        let ids_cli = []
+        let names_pro = []
+        let ids_pro = []
         //Variaveis Globais
         let resposta
         let table_name
@@ -509,6 +521,7 @@
                     document.getElementById('adicionar_venda').classList.value = 'adicionar_venda'
                     break;
             }
+            construtor_opcs()
         }
         //Função que todos os dados de uma tabela
         async function obter_dados(table){
@@ -673,6 +686,14 @@
                     if(item === 'id_vend'){
                         ids.push(linha['id_vend'])
                     }
+                    if(item === 'cli_nome'){
+                        names_cli.push(linha['cli_nome'])
+                        ids_cli.push(linha['id'])
+                    }
+                    if(item === 'pro_nome'){
+                        names_pro.push(linha['pro_nome'])
+                        ids_pro.push(linha['id'])
+                    }
                 })
 
                 let td_ed = document.createElement('th')
@@ -715,6 +736,20 @@
                 obj.value = item
                 obj.innerHTML = item
                 opcoes.appendChild(obj)
+            })
+            const opcoes2 = document.querySelector('#cli_name')
+            names_cli.forEach(item =>{
+                let obj2 = document.createElement('option')
+                obj2.value = item
+                obj2.innerHTML = item
+                opcoes2.appendChild(obj2)
+            })
+            const opcoes3= document.querySelector('#pro_name')
+            names_pro.forEach(item =>{
+                let obj3 = document.createElement('option')
+                obj3.value = item
+                obj3.innerHTML = item
+                opcoes3.appendChild(obj3)
             })
         }
         // Função que chama o processo de Adicionar
