@@ -399,15 +399,12 @@
                     1
                 </div>
                 <div class="adicionar_venda" id="adicionar_venda">
-                    <input placeholder="Cliente" list="cli_name">
+                    <input placeholder="Cliente" list="cli_name" id="cliente_nome">
                     <datalist id="cli_name"></datalist>
-                    <input placeholder="Produto" list="pro_name">
+                    <input placeholder="Produto" list="pro_name" id="prod_nome">
                     <datalist id="pro_name"></datalist>
-                    <!-- Ver depois esse maximo tem que ser o maximo que ta no "estoque" -->
-                    <input placeholder="Quantidade" max="">
-                    <!-- A ideia é puxar os ids pelos nomes que estao nas listas e com eles
-                        construir todos os dados para enviar para o banco
-                    -->
+                    <input placeholder="Quantidade" id="q_var" onfocus="atualiza()" type="number">
+                    <button onclick="new_compra()">Adicionar Compra</button>
                 </div>
             </main>
        </div>
@@ -434,6 +431,7 @@
         let ids_cli = []
         let names_pro = []
         let ids_pro = []
+        let est_pro = []
         //Variaveis Globais
         let resposta
         let table_name
@@ -693,6 +691,7 @@
                     if(item === 'pro_nome'){
                         names_pro.push(linha['pro_nome'])
                         ids_pro.push(linha['id'])
+                        est_pro.push(linha['quantidade'])
                     }
                 })
 
@@ -751,6 +750,18 @@
                 obj3.innerHTML = item
                 opcoes3.appendChild(obj3)
             })
+            
+            
+        }
+        let i = true
+        // Função que atualiza o maximo de items de um elemento
+        function atualiza(){
+            if(i){
+                const opcoes4 = document.querySelector('#q_var')
+                let a = document.getElementById('prod_nome').value
+                opcoes4.setAttribute('max',`${est_pro[names_pro.indexOf(a)]}`)
+                i = false
+            }
         }
         // Função que chama o processo de Adicionar
         function adicionar(cod){
@@ -844,6 +855,26 @@
                 alert('Registro Mantido')
             }
         }
+        
+        function new_compra(){
+            let cli_nome = document.getElementById('cliente_nome').value
+            let prod_nome = document.getElementById('prod_nome').value
+            let q_var = document.getElementById('q_var').value
+            if(names_cli.indexOf(cli_nome) == -1 || names_pro.indexOf(prod_nome) == -1 || est_pro.indexOf(q_var) == -1){
+                l(est_pro[names_pro.indexOf(prod_nome)])
+                l(q_var)
+                if( est_pro[names_pro.indexOf(prod_nome)] > q_var){
+                    l('Passou')
+                }else{
+                    alert('Quantidade errada')
+                }
+            }else{
+                alert('Nomes errados')
+            }
+            
+            
+        }
+        
         obter_dados('clientes')
         obter_dados('vendedores')
         obter_dados('produtos')
