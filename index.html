@@ -300,13 +300,17 @@
             background: green;
         }
         .vendas.ativo{
-            display: flex;
+            display: block;
             justify-content: flex-start;
             align-items: center;
             flex-direction: column;
-            width: 100%;
-            height: 100%;
-            background: red;
+            width: 50%;
+        }
+        .vendas.ativo tr{
+            width: 50%;
+        }
+        .vendas.ativo td{
+            width: 20%;
         }
         .historico.ativo{
             display: block;
@@ -334,6 +338,13 @@
             width: 10%;
             background: #fff;
             height: 50%;
+        }
+        .div_vendas{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
@@ -390,21 +401,26 @@
                 <nav id="btns-opc-vendas" class="btns-opc-vendas">
                     <div onclick="troca_vendas(0)">Visualizar Vendas</div>
                     <div onclick="troca_vendas(2)">Nova venda</div>
-                    <div onclick="troca_vendas(1)">Visualizar Historico de Vendas</div>
                 </nav>
-                <div class="vendas" id="vendas">
-                    <div></div>
-                </div>
-                <div class="historico" id="historico">
-                    1
+                <div class="div_vendas">
+                    <div class="vendas" id="vendas">
+
+                    </div>
                 </div>
                 <div class="adicionar_venda" id="adicionar_venda">
                     <input placeholder="Cliente" list="cli_name" id="cliente_nome">
                     <datalist id="cli_name"></datalist>
-                    <input placeholder="Produto" list="pro_name" id="prod_nome">
-                    <datalist id="pro_name"></datalist>
-                    <input placeholder="Quantidade" id="q_var" onfocus="atualiza()" type="number">
-                    <button onclick="new_compra()">Adicionar Compra</button>
+                    <div id="produtos_div">
+                        <div id="div0">
+                            <input placeholder="Produto" list="pro_name" id="prod_nome">
+                            <datalist id="pro_name"></datalist>
+                            <input placeholder="Quantidade" id="q_var" onclick="atualiza(0)" type="number">
+                        </div>
+                    </div>
+                    <div>
+                        <button onclick="new_compra()">Adicionar Compra</button>
+                        <button onclick="more_prods()">Adicionar Produto</button>
+                    </div>
                 </div>
             </main>
        </div>
@@ -432,6 +448,7 @@
         let names_pro = []
         let ids_pro = []
         let est_pro = []
+        let preco_pro = []
         //Variaveis Globais
         let resposta
         let table_name
@@ -507,9 +524,6 @@
                 case 0:
                     document.getElementById('vendas').classList.toggle('ativo')
                     break;
-                case 1:
-                    document.getElementById('historico').classList.toggle('ativo')
-                    break;
                 case 2:
                     document.getElementById('adicionar_venda').classList.toggle('ativo')
                     break;
@@ -519,7 +533,32 @@
                     document.getElementById('adicionar_venda').classList.value = 'adicionar_venda'
                     break;
             }
+            obter_dados('vendas')
             construtor_opcs()
+        }
+        let a = 1
+        function more_prods(){
+            // seleciona a div onde os inputs serão clonados
+            const divProdutos = document.getElementById('produtos_div');
+
+            // seleciona os inputs que serão clonados
+            const inputProduto = document.getElementById('prod_nome');
+            const inputQuantidade = document.getElementById('q_var');
+            const div = document.createElement('div')
+            div.setAttribute("id",`div${a}`)
+
+            // cria clones dos inputs
+            const cloneInputProduto = inputProduto.cloneNode(true);
+            const cloneInputQuantidade = inputQuantidade.cloneNode(true);
+            cloneInputQuantidade.setAttribute("onclick",`atualiza(${a})`)
+            cloneInputProduto.value = ''
+            cloneInputQuantidade.value = ''
+            //adicona elementos na div
+            div.appendChild(cloneInputProduto)
+            div.appendChild(cloneInputQuantidade)
+            // adiciona os clones na div de produtos
+            divProdutos.appendChild(div);
+            a++
         }
         //Função que todos os dados de uma tabela
         async function obter_dados(table){
@@ -614,6 +653,12 @@
                             body: JSON.stringify({table : table,nome : array[0],descricao : array[1],preco : array[2],quantidade : array[3],idvend : array[4]})
                         });
                 break;
+                case 3:
+                dados = await fetch('./Network/Functions/adciona.php',{
+                            method: "POST",
+                            body: JSON.stringify({table : table,cliente_id : array[0],produto_quant : array[1].join('-'),venda_valor : array[2],pro_cod : array[3].join('-'),data_venda : array[4]})
+                        });
+                break;
             }
             resposta = await dados.json();
             if(resposta){
@@ -692,10 +737,12 @@
                         names_pro.push(linha['pro_nome'])
                         ids_pro.push(linha['id'])
                         est_pro.push(linha['quantidade'])
+                        preco_pro.push(linha['preco'])
                     }
                 })
 
-                let td_ed = document.createElement('th')
+                if(tabl != 'vendas'){
+                    let td_ed = document.createElement('th')
                     td_ed.innerHTML = 'Editar'
                     if(linha['id']){
                         td_ed.setAttribute('onclick',`editar('${linha['id']}','${tabl}',0)`)
@@ -705,7 +752,7 @@
                     td_ed.classList.add('opc')
                     tr.appendChild(td_ed)
 
-                let td_ex = document.createElement('th')
+                    let td_ex = document.createElement('th')
                     td_ex.innerHTML = 'Excluir'
                     if(linha['id']){
                         td_ex.setAttribute('onclick',`excluir('${linha['id']}','${tabl}',0)`)
@@ -714,10 +761,11 @@
                     }
                     td_ex.classList.add('opc')
                     tr.appendChild(td_ex)
-                if(linha['id']){
-                    tr.setAttribute('id',tabl + linha['id'])
-                }else{
-                    tr.setAttribute('id',tabl + linha['id_vend'])
+                    if(linha['id']){
+                        tr.setAttribute('id',tabl + linha['id'])
+                    }else{
+                        tr.setAttribute('id',tabl + linha['id_vend'])
+                    }
                 }
                 
                 table.appendChild(tr)
@@ -755,13 +803,11 @@
         }
         let i = true
         // Função que atualiza o maximo de items de um elemento
-        function atualiza(){
-            if(i){
-                const opcoes4 = document.querySelector('#q_var')
-                let a = document.getElementById('prod_nome').value
-                opcoes4.setAttribute('max',`${est_pro[names_pro.indexOf(a)]}`)
-                i = false
-            }
+        function atualiza(e){
+            let div = document.getElementById(`div${e}`)
+            let input_valor = div.querySelector('#q_var')
+            let nome_produto = div.querySelector('#prod_nome').value
+            input_valor.setAttribute('max',est_pro[names_pro.indexOf(nome_produto)])
         }
         // Função que chama o processo de Adicionar
         function adicionar(cod){
@@ -855,26 +901,41 @@
                 alert('Registro Mantido')
             }
         }
-        
-        function new_compra(){
+        // Adiciona uma venda
+        function new_compra(){  
             let cli_nome = document.getElementById('cliente_nome').value
-            let prod_nome = document.getElementById('prod_nome').value
-            let q_var = document.getElementById('q_var').value
-            if(names_cli.indexOf(cli_nome) == -1 || names_pro.indexOf(prod_nome) == -1 || est_pro.indexOf(q_var) == -1){
-                l(est_pro[names_pro.indexOf(prod_nome)])
-                l(q_var)
-                if( est_pro[names_pro.indexOf(prod_nome)] > q_var){
-                    l('Passou')
-                }else{
-                    alert('Quantidade errada')
-                }
-            }else{
-                alert('Nomes errados')
-            }
-            
-            
+            let prod_ids = []
+            let q_var = []
+            let valores = []
+            let ven_vall = 0
+
+            document.querySelectorAll('#prod_nome').forEach(ele =>{
+                prod_ids.push(ids_pro[names_pro.indexOf(ele.value)])
+                valores.push(preco_pro[names_pro.indexOf(ele.value)])
+            })
+            document.querySelectorAll('#q_var').forEach(ele =>{
+                q_var.push(ele.value)
+            })
+
+            valores.forEach(function(e,n){
+                ven_vall = ven_vall + e * q_var[n]
+            })
+            ven_vall.toFixed(2)
+            const hoje = new Date();
+            const dia = hoje.getDate();
+            const mes = hoje.getMonth() + 1;
+            const ano = hoje.getFullYear();
+            const dataAtual = `${ano}-${mes}-${dia}`;
+
+            let array =[
+                ids_cli[names_cli.indexOf(cli_nome)],
+                q_var,
+                ven_vall,
+                prod_ids,
+                dataAtual
+            ]
+            adicionar_dados(3,array)
         }
-        
         obter_dados('clientes')
         obter_dados('vendedores')
         obter_dados('produtos')
