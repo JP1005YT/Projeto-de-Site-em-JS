@@ -292,12 +292,28 @@
         }
         .adicionar_venda.ativo{
             display: flex;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
             flex-direction: column;
             width: 100%;
             height: 100%;
-            background: green;
+        }
+        .adicionar_venda.ativo > div{
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-direction: column;
+            width: 50%;
+            height: 50%;
+        }
+        .adicionar_venda.ativo input{
+            margin: 0 30px 0 30px;
+            padding: 0 10px 0 10px;
+            font-size: 20px;
+        }
+        .adicionar_venda.ativo button{
+            padding: 10px;
+            font-size: 20px;
         }
         .vendas.ativo{
             display: block;
@@ -340,6 +356,9 @@
             height: 50%;
         }
         .div_vendas{
+            display: none;
+        }
+        .div_vendas.ativo{
             display: flex;
             align-items: center;
             justify-content: center;
@@ -399,27 +418,30 @@
                     <i class='bx bx-x'></i>
                 </div>
                 <nav id="btns-opc-vendas" class="btns-opc-vendas">
-                    <div onclick="troca_vendas(0)">Visualizar Vendas</div>
+                    <div onclick="troca_vendas(1)">Visualizar Vendas</div>
                     <div onclick="troca_vendas(2)">Nova venda</div>
                 </nav>
-                <div class="div_vendas">
+                <div class="div_vendas" id="div_vendas">
                     <div class="vendas" id="vendas">
 
                     </div>
                 </div>
                 <div class="adicionar_venda" id="adicionar_venda">
-                    <input placeholder="Cliente" list="cli_name" id="cliente_nome">
-                    <datalist id="cli_name"></datalist>
-                    <div id="produtos_div">
-                        <div id="div0">
-                            <input placeholder="Produto" list="pro_name" id="prod_nome">
-                            <datalist id="pro_name"></datalist>
-                            <input placeholder="Quantidade" id="q_var" onclick="atualiza(0)" type="number">
-                        </div>
-                    </div>
+                    <h1>Adicionar Venda</h1>
                     <div>
-                        <button onclick="new_compra()">Adicionar Compra</button>
-                        <button onclick="more_prods()">Adicionar Produto</button>
+                        <input placeholder="Cliente" list="cli_name" id="cliente_nome">
+                        <datalist id="cli_name"></datalist>
+                        <div id="produtos_div">
+                            <div id="div0">
+                                <input placeholder="Produto" list="pro_name" id="prod_nome">
+                                <datalist id="pro_name"></datalist>
+                                <input placeholder="Quantidade" id="q_var" onclick="atualiza(0)" type="number">
+                            </div>
+                        </div>
+                        <div>
+                            <button onclick="new_compra()">Adicionar Compra</button>
+                            <button onclick="more_prods()">Adicionar Produto</button>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -521,16 +543,17 @@
             document.getElementById('btns-opc-vendas').classList.toggle('ativo')
             document.getElementById('x').classList.toggle('ativo')
             switch (e) {
-                case 0:
+                case 1:
                     document.getElementById('vendas').classList.toggle('ativo')
+                    document.getElementById('div_vendas').classList.toggle('ativo')
                     break;
                 case 2:
                     document.getElementById('adicionar_venda').classList.toggle('ativo')
                     break;
                 default:
                     document.getElementById('vendas').classList.value = 'vendas'
-                    document.getElementById('historico').classList.value = 'historico'
                     document.getElementById('adicionar_venda').classList.value = 'adicionar_venda'
+                    document.getElementById('div_vendas').classList.value = 'div_vendas'
                     break;
             }
             obter_dados('vendas')
