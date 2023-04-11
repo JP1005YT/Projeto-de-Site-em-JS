@@ -644,7 +644,15 @@
                         });
                         resposta = await dadosss.json();
                     break;
-                default:
+                case 'vendas':
+                l(id)
+                l(array)
+                l(cod)
+                const dadossss = await fetch('./Network/Functions/edit.php',{
+                            method: "POST",
+                            body: JSON.stringify({table : "produtos",id : id,quantidade : array,cod : cod})
+                        });
+                        resposta = await dadossss.json();
                     break;
             }
             if(resposta){
@@ -925,7 +933,7 @@
             }
         }
         // Adiciona uma venda
-        function new_compra(){  
+        function new_compra(){
             let cli_nome = document.getElementById('cliente_nome').value
             let prod_ids = []
             let q_var = []
@@ -935,9 +943,11 @@
             document.querySelectorAll('#prod_nome').forEach(ele =>{
                 prod_ids.push(ids_pro[names_pro.indexOf(ele.value)])
                 valores.push(preco_pro[names_pro.indexOf(ele.value)])
+                ele.value = ""
             })
             document.querySelectorAll('#q_var').forEach(ele =>{
                 q_var.push(ele.value)
+                ele.value = ""
             })
 
             valores.forEach(function(e,n){
@@ -957,7 +967,15 @@
                 prod_ids,
                 dataAtual
             ]
+
+            l(est_pro)
+            prod_ids.forEach(function(ele,n) {
+                let Arrow = est_pro[ids_pro.indexOf(ele)]
+                let result = Arrow - q_var[n]
+                editar_dados("vendas",ele,result,"1")
+            })
             adicionar_dados(3,array)
+            cli_nome.value = ""
         }
         obter_dados('clientes')
         obter_dados('vendedores')
