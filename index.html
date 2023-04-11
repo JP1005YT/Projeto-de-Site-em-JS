@@ -435,7 +435,7 @@
                             <div id="div0">
                                 <input placeholder="Produto" list="pro_name" id="prod_nome">
                                 <datalist id="pro_name"></datalist>
-                                <input placeholder="Quantidade" id="q_var" onclick="atualiza(0)" type="number">
+                                <input placeholder="Quantidade" id="q_var" onfocus="atualiza(0)" type="number">
                             </div>
                         </div>
                         <div>
@@ -456,6 +456,14 @@
         <h1>CRUD</h1>
     </header>
     <main>
+        <div style="display:flex ;justify-content: center;align-items: center;flex-direction: column;">
+            <h1>SITE POR JOAO GIROTTO</h1>
+            <span>
+                <a href="https://github.com/JP1005YT">
+                    <i class='bx bxl-github' style="font-size: 250px; color: black;"></i>
+                </a>
+            </span>
+        </div>
         <table class="clientes" id="clientes"></table><br>
         <table class="vendedores" id="vendedores"></table><br>
         <table class="produtos" id="produtos"></table><br>
@@ -712,7 +720,7 @@
                 l('Dados Cadastrados')
             }
         }
-        // Função que monta a table
+        // Função que monta a table,
         function construtor(array,tabl){
             const table = document.querySelector(`#${tabl}`)
             table.innerHTML = ''
@@ -939,7 +947,6 @@
             let q_var = []
             let valores = []
             let ven_vall = 0
-
             document.querySelectorAll('#prod_nome').forEach(ele =>{
                 prod_ids.push(ids_pro[names_pro.indexOf(ele.value)])
                 valores.push(preco_pro[names_pro.indexOf(ele.value)])
@@ -947,6 +954,11 @@
             })
             document.querySelectorAll('#q_var').forEach(ele =>{
                 q_var.push(ele.value)
+                if(ele.value > ele.max){
+                    alert("Valor Superior ao Estoque")
+                    ele.value = ""
+                    return;
+                }
                 ele.value = ""
             })
 
@@ -967,12 +979,11 @@
                 prod_ids,
                 dataAtual
             ]
-
             l(est_pro)
             prod_ids.forEach(function(ele,n) {
                 let Arrow = est_pro[ids_pro.indexOf(ele)]
                 let result = Arrow - q_var[n]
-                editar_dados("vendas",ele,result,"1")
+             editar_dados("vendas",ele,result,"1")
             })
             adicionar_dados(3,array)
             cli_nome.value = ""
